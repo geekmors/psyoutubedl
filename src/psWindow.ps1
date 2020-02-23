@@ -2,53 +2,48 @@
 
 $font = 'Microsoft Sans Serif,13'
 $ScriptPath = Split-Path $script:MyInvocation.MyCommand.Path
-$videoSavePathroot = "$ENV:USERPROFILE\Videos"
+$VideoSavePathroot = "$Env:USERPROFILE\Videos"
 $videoSaveFileName = "%(title)s.%(ext)s"
 Write-output $ScriptPath
 
-function changeSaveLocation {
-    try {
-        $selectedSaveLocation.ShowDialog()
-        if (($selectedSaveLocation.SelectedPath).Length = 0   )
-        {}
-        else {
-            $videoSavePathroot = $selectedSaveLocation.SelectedPath
-       }
-    }
-    catch {
-        
-    }
-    
-}
 
-function downloadVid{
-    try{
+function downloadVid {
+            $VideoSavePath= IF (($selectedSaveLocation.SelectedPath).Length -eq 0 ){
+                             "$Env:USERPROFILE\Videos"
+                            }else{
+                             $SelectedSaveLocation.SelectedPath
+                             }
+    try {
+    
+            
         
-        if($inputURL.text -eq ""){
-            [System.windows.forms.messageBox]::show("Please enter a URL","warning")
+        if ($inputURL.text -eq "") {
+            [System.windows.forms.messageBox]::show("Please enter a URL", "warning")
         }
-        elseif(($inputURL.text -as [System.URI]).AbsoluteURI){
+        elseif (($inputURL.text -as [System.URI]).AbsoluteURI) {
+            
+          
             $videoURL = $inputURL.text
             $downldCmd = "$scriptPath\youtube-dl.exe"
-            $downloadButton.Enabled=$false
-            Start-Process $downldCmd -ArgumentList $videoURL,"-o -s","$videoSavePathroot\$videoSaveFileName" -Wait -NoNewWindow
+            $downloadButton.Enabled = $false
+            Start-Process $downldCmd -ArgumentList $videoURL, "-o", "$VideoSavePath\$videoSaveFileName" -Wait -NoNewWindow
 
-            [System.windows.forms.messageBox]::show("Video has finished Downloading","Message")
-
+            [System.windows.forms.messageBox]::show("Video has finished Downloading", "Message")
+             #Start-Process $VideoSavePath
             $inputURL.text = ""          
-            $downloadButton.Enabled=$true
+            $downloadButton.Enabled = $true
             
         }
-        else{
+        else {
 
-            [System.windows.forms.messageBox]::show("Please enter a valid URL","warning")
+            [System.windows.forms.messageBox]::show("Please enter a valid URL", "warning")
         }
             
        
     }
-    catch{
+    catch {
 
-        [System.windows.forms.messageBox]::show("an error occurred","Error")
+        [System.windows.forms.messageBox]::show("an error occurred", "Error")
         
     }
     
@@ -57,10 +52,10 @@ function downloadVid{
 $vidlabel = New-Object System.Windows.Forms.Label
 $vidlabel.Text = "Enter youtube video url:"
 $vidlabel.Font = $font
-$vidlabel.Width= 300
+$vidlabel.Width = 300
 $vidlabel.Height = 20
 $vidlabel.AutoSize = $true
-$vidlabel.Location = New-Object System.Drawing.Point(20,20)
+$vidlabel.Location = New-Object System.Drawing.Point(20, 20)
 $vidlabel.ForeColor = "#ffffff"
 
 $inputURL = New-Object System.Windows.Forms.TextBox
@@ -68,42 +63,42 @@ $inputURL.Width = 400
 $inputURL.Height = 10
 $inputURL.Font = $font
 $inputURL.Multiline = $false
-$inputURL.Location = New-Object System.Drawing.Point(20,48)
+$inputURL.Location = New-Object System.Drawing.Point(20, 48)
 
 $downloadButton = New-Object System.Windows.Forms.Button
 $downloadButton.Text = "Start Download"
 $downloadButton.Font = $font
-$downloadButton.Width= 200
+$downloadButton.Width = 200
 $downloadButton.Height = 35
 $downloadButton.BackColor = "#CC5538"
 $downloadButton.ForeColor = "#ffffff"
-$downloadButton.Location = New-Object System.Drawing.Point(20,80)
+$downloadButton.Location = New-Object System.Drawing.Point(20, 80)
 
 ##Folder dialog path
 $filepathlabel = New-Object System.Windows.Forms.Label
-$filepathlabel.Text  = "Video save location `n $videoSavePathroot"
+$filepathlabel.Text = "Video save location `n $videoSavePathroot"
 $filepathlabel.Font = $font
-$filepathlabel.Width= 300
+$filepathlabel.Width = 300
 $filepathlabel.Height = 40
 $filepathlabel.AutoSize = $true
-$filepathlabel.Location = New-Object System.Drawing.Point(20,120)
+$filepathlabel.Location = New-Object System.Drawing.Point(20, 120)
 $filepathlabel.ForeColor = "#ffffff"
 
 $filepathButton = New-Object System.Windows.Forms.Button
 $filepathButton.Text = "change save location"
 $filepathButton.Font = $font
-$filepathButton.Width= 200
+$filepathButton.Width = 200
 $filepathButton.Height = 35
 $filepathButton.BackColor = "#CC5538"
 $filepathButton.ForeColor = "#ffffff"
-$filepathButton.Location = New-Object System.Drawing.Point(20,165)
+$filepathButton.Location = New-Object System.Drawing.Point(20, 165)
 
 $selectedSaveLocation = New-Object System.Windows.Forms.FolderBrowserDialog
 $selectedSaveLocation.ShowNewFolderButton = $true
 
 $MainWindow = New-Object System.Windows.Forms.Form
 $MainWindow.ClientSize = '500,250'
-$MainWindow.controls.AddRange(@($vidlabel,$inputURL,$downloadButton,$filepathlabel,$filepathButton))
+$MainWindow.controls.AddRange(@($vidlabel, $inputURL, $downloadButton, $filepathlabel, $filepathButton))
 $MainWindow.Text = "Lazy Stuff"
 $MainWindow.BackColor = "#191919"
 $MainWindow.MaximumSize = '500,250'
@@ -111,8 +106,10 @@ $MainWindow.MinimumSize = '500,250'
 $MainWindow.StartPosition = 1
 $MainWindow.TopMost = $true
 
-$filepathButton.Add_Click({ changeSaveLocation
-$filepathlabel.Text = $selectedSaveLocation.SelectedPath } )
-$downloadButton.Add_Click({ downloadVid })
+$filepathButton.Add_Click( { 
+        $selectedSaveLocation.ShowDialog()
+        $filepathlabel.Text = "Video save location `n " + $selectedSaveLocation.SelectedPath 
+  } )
+$downloadButton.Add_Click( { downloadVid })
 
 [void]$MainWindow.ShowDialog()
