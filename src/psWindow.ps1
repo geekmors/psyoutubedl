@@ -74,6 +74,7 @@ $MainWindow.BackColor = "#191919"
 $MainWindow.MaximumSize = '500,250'
 $MainWindow.MinimumSize = '500,250'
 $MainWindow.StartPosition = 1
+$MainWindow.TopMost = $true
 
 
 $downloadButton.Add_Click({ downloadVid })
