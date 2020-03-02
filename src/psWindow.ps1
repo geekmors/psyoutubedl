@@ -81,7 +81,7 @@ $filepathlabel.Font = $font
 $filepathlabel.Width = 300
 $filepathlabel.Height = 40
 $filepathlabel.AutoSize = $true
-$filepathlabel.Location = New-Object System.Drawing.Point(20, 120)
+$filepathlabel.Location = New-Object System.Drawing.Point(20, 200)
 $filepathlabel.ForeColor = "#ffffff"
 
 $filepathButton = New-Object System.Windows.Forms.Button
@@ -91,7 +91,7 @@ $filepathButton.Width = 200
 $filepathButton.Height = 35
 $filepathButton.BackColor = "#CC5538"
 $filepathButton.ForeColor = "#ffffff"
-$filepathButton.Location = New-Object System.Drawing.Point(20, 165)
+$filepathButton.Location = New-Object System.Drawing.Point(20, 250)
 
 $selectedSaveLocation = New-Object System.Windows.Forms.FolderBrowserDialog
 $selectedSaveLocation.ShowNewFolderButton = $true
@@ -101,8 +101,8 @@ $MainWindow.ClientSize = '500,250'
 $MainWindow.controls.AddRange(@($vidlabel, $inputURL, $downloadButton, $filepathlabel, $filepathButton))
 $MainWindow.Text = "Lazy Stuff"
 $MainWindow.BackColor = "#191919"
-$MainWindow.MaximumSize = '500,250'
-$MainWindow.MinimumSize = '500,250'
+$MainWindow.MaximumSize = '500,350'
+$MainWindow.MinimumSize = '500,350'
 $MainWindow.StartPosition = 1
 $MainWindow.TopMost = $true
 
